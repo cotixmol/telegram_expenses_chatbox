@@ -1,0 +1,2 @@
+from interface_message_processor import IMessageProcessor
+from interface_user_repository import IUserRepository
