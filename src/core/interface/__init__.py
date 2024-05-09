@@ -1,2 +1,3 @@
-from interface_message_processor import IMessageProcessor
+from interface_message_processor_repository import IMessageProcessorRepository
 from interface_user_repository import IUserRepository
+from interface_database_repository import IDatabaseRepository
