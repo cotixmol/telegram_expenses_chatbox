@@ -7,10 +7,12 @@ from core.entities import Expense
 
 Base = declarative_base()
 
+
 class UserTable(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
     telegram_id = Column(String, unique=True, nullable=False)
+
 
 class ExpenseTable(Base):
     __tablename__ = 'expenses'
@@ -20,6 +22,7 @@ class ExpenseTable(Base):
     amount = Column(Numeric, nullable=False)
     category = Column(String, nullable=False)
     added_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
 
 class PostgreSQLDatabaseRepository(IDatabaseRepository):
     def __init__(self, db_url):
@@ -39,8 +42,8 @@ class PostgreSQLDatabaseRepository(IDatabaseRepository):
             )
             session.add(db_expense)
             session.commit()
-        except Exception as e: 
+        except Exception as e:
             session.rollback()
-            raise Exception
+            raise e
         finally:
             session.close()

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from core.entities import Expense, Message
+from core.entities import Message
+
 
 class IMessageProcessorRepository(ABC):
     @abstractmethod

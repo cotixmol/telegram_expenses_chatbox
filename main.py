@@ -5,13 +5,14 @@ from adapters.database import PostgreSQLDatabaseRepository
 
 app = FastAPI()
 
+
 @app.post("/process_message/")
 async def process_message(incoming_message: Message):
     process_user_message = ProcessUserMessage(
         user_repository=None,
         message_processor_repository=None,
         database_repository=PostgreSQLDatabaseRepository)
-    
+
     user = User(user_id=incoming_message.user_id)
     message = Message(content=incoming_message.text)
 
