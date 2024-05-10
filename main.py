@@ -1,7 +1,10 @@
 from fastapi import FastAPI, HTTPException
 from core.entities import Message, User
 from core.use_cases import ProcessUserMessage
-from adapters.database import PostgreSQLDatabaseRepository
+from adapters.telegram_bot import (PostgreSQLDatabaseRepository,
+                                   PostgresUserRepository,
+                                   MessageLLMProcessorRepository
+                                   )
 
 app = FastAPI()
 
@@ -9,8 +12,8 @@ app = FastAPI()
 @app.post("/process_message/")
 async def process_message(incoming_message: Message):
     process_user_message = ProcessUserMessage(
-        user_repository=None,
-        message_processor_repository=None,
+        user_repository=PostgresUserRepository,
+        message_processor_repository=MessageLLMProcessorRepository,
         database_repository=PostgreSQLDatabaseRepository)
 
     user = User(user_id=incoming_message.user_id)
