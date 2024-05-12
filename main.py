@@ -27,8 +27,14 @@ async def process_message(
         database_repository=database_repository
     )
 
-    user = User(user_id=incoming_message.user_id)
-    message = Message(content=incoming_message.text)
+    user = User(
+        user_id=incoming_message.user_id,
+        first_name=incoming_message.first_name,
+        last_name=incoming_message.last_name
+    )
+    message = Message(
+        text=incoming_message.text
+    )
 
     try:
         response = process_user_message.execute(user=user, message=message)
