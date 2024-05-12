@@ -11,7 +11,7 @@ Base = declarative_base()
 class UserTable(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
-    telegram_id = Column(String, unique=True, nullable=False)
+    telegram_id = Column(Integer, unique=True, nullable=False)
 
 
 class ExpenseTable(Base):
@@ -31,27 +31,26 @@ class PostgreSQLDatabaseRepository(IDatabaseRepository):
         self.Session = sessionmaker(bind=self.engine)
 
     def is_user_whitelisted(self, user_id: str) -> bool:
-        exists = (
-            self.session.query(UserTable)
-            .filter(UserTable.telegram_id == user_id)
-            .scalar() is not None
-        )
-        return exists
+        with self.Session() as session:
+            exists = (
+                session.query(UserTable)
+                .filter(UserTable.telegram_id == user_id)
+                .scalar() is not None
+            )
+            return exists
 
     def add_expense(self, expense: Expense):
-        session = self.Session()
-        try:
-            db_expense = ExpenseTable(
-                user_id=expense.user_id,
-                description=expense.description,
-                amount=expense.amount,
-                category=expense.category,
-                added_at=expense.add_at
-            )
-            session.add(db_expense)
-            session.commit()
-        except Exception as e:
-            session.rollback()
-            raise e
-        finally:
-            session.close()
+        with self.Session() as session:
+            try:
+                db_expense = ExpenseTable(
+                    user_id=expense.user_id,
+                    description=expense.description,
+                    amount=expense.amount,
+                    category=expense.category,
+                    added_at=expense.add_at
+                )
+                session.add(db_expense)
+                session.commit()
+            except Exception as e:
+                session.rollback()
+                raise e

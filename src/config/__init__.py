@@ -1,1 +1,1 @@
-from .dependencies import get_user_repository, get_database_repository, get_message_processor_repository
+from .dependencies import get_database_repository, get_message_processor_repository

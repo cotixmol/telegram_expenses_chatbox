@@ -1,4 +1,3 @@
 from .message_processor_repository import MessageLLMProcessorRepository
 from .postgres_repository import PostgreSQLDatabaseRepository
-from .user_repository import PostgresUserRepository
 
