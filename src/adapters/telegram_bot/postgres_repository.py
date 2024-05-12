@@ -25,10 +25,18 @@ class ExpenseTable(Base):
 
 
 class PostgreSQLDatabaseRepository(IDatabaseRepository):
-    def __init__(self, db_url):
-        self.engine = create_engine(db_url)
+    def __init__(self, database_uri):
+        self.engine = create_engine(database_uri)
         Base.metadata.create_all(self.engine)
         self.Session = sessionmaker(bind=self.engine)
+
+    def is_user_whitelisted(self, user_id: str) -> bool:
+        exists = (
+            self.session.query(UserTable)
+            .filter(UserTable.telegram_id == user_id)
+            .scalar() is not None
+        )
+        return exists
 
     def add_expense(self, expense: Expense):
         session = self.Session()
