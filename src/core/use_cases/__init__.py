@@ -1,1 +1,1 @@
-from process_user_message import ProcessUserMessage
+from .process_user_message import ProcessUserMessage

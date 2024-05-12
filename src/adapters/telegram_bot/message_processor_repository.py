@@ -1,5 +1,5 @@
-from core.interface import IMessageProcessorRepository
-from core.entities import Message
+from src.core.interface import IMessageProcessorRepository
+from src.core.entities import Message
 
 
 class MessageLLMProcessorRepository(IMessageProcessorRepository):

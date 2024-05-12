@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from core.entities import Expense
+from src.core.entities import Expense
 
 
 class IDatabaseRepository(ABC):

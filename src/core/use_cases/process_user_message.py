@@ -1,5 +1,5 @@
-from core.interface import IUserRepository, IMessageProcessorRepository, IDatabaseRepository
-from core.entities import User, Message
+from src.core.interface import IUserRepository, IMessageProcessorRepository, IDatabaseRepository
+from src.core.entities import User, Message
 
 
 class ProcessUserMessage:

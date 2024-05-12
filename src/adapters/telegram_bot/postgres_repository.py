@@ -2,8 +2,8 @@ from sqlalchemy import Column, Integer, String, DateTime, Numeric, ForeignKey, c
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
-from core.interface import IDatabaseRepository
-from core.entities import Expense
+from src.core.interface import IDatabaseRepository
+from src.core.entities import Expense
 
 Base = declarative_base()
 

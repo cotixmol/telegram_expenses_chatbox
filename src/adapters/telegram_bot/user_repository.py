@@ -1,4 +1,4 @@
-from core.interface import IUserRepository
+from src.core.interface import IUserRepository
 
 
 class PostgresUserRepository(IUserRepository):

@@ -2,12 +2,8 @@ from fastapi import FastAPI, HTTPException, Depends
 from dotenv import load_dotenv
 from src.config import get_message_processor_repository, get_database_repository, get_user_repository
 from src.core.interface import IDatabaseRepository, IMessageProcessorRepository, IUserRepository
-from core.entities import Message, User
-from core.use_cases import ProcessUserMessage
-from adapters.telegram_bot import (PostgreSQLDatabaseRepository,
-                                   PostgresUserRepository,
-                                   MessageLLMProcessorRepository
-                                   )
+from src.core.entities import Message, User
+from src.core.use_cases import ProcessUserMessage
 
 load_dotenv()
 
