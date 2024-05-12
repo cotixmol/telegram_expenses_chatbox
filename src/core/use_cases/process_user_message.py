@@ -15,7 +15,7 @@ class ProcessUserMessage:
             raise UserNotFoundException(user_id=user.user_id, first_name=user.first_name, last_name=user.last_name)
 
         try:
-            expense = self.message_processor_repository.process_message(message)
+            expense = self.message_processor_repository.process_message(user, message)
             self.database_repository.add_expense(expense)
             return f"{expense.category} expense added✅"
         except ValueError as e:

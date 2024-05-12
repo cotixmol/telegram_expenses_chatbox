@@ -1,3 +1,4 @@
+from uuid import UUID
 from pydantic import BaseModel
 from datetime import datetime
 from enum import Enum
@@ -18,9 +19,9 @@ class ExpenseCategory(Enum):
 
 
 class Expense(BaseModel):
-    id: int
+    id: UUID
     user_id: int
     description: str
     amount: float
     category: ExpenseCategory
-    add_at: datetime
+    added_at: datetime
