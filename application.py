@@ -9,6 +9,7 @@ load_dotenv()
 
 application = FastAPI()
 
+
 @application.post("/process_message/")
 async def process_message(
     incoming_message: IncomingMessage,
