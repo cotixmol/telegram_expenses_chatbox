@@ -11,10 +11,10 @@ from adapters.telegram_bot import (PostgreSQLDatabaseRepository,
 
 load_dotenv()
 
-app = FastAPI()
+application = FastAPI()
 
 
-@app.post("/process_message/")
+@application.post("/process_message/")
 async def process_message(
     incoming_message: Message,
     user_repository: IUserRepository = Depends(get_user_repository),
