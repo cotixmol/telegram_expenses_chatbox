@@ -1,5 +1,7 @@
 from core.interface import IMessageProcessorRepository
+from core.entities import Message
 
 
 class MessageLLMProcessorRepository(IMessageProcessorRepository):
-    pass
+    def process_message(self, message: Message):
+        pass
