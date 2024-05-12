@@ -8,8 +8,9 @@ from src.utils import validate_json_structure
 
 
 class OpenAIMessageProcessorRepository(IMessageProcessorRepository):
-    def __init__(self, open_ai_api_key):
+    def __init__(self, open_ai_api_key, open_ai_model):
         self.api_key = open_ai_api_key
+        self.open_ai_model = open_ai_model
 
     def process_message(self, user: User, message: Message) -> Expense:
         client = OpenAI(api_key=self.api_key)
@@ -24,7 +25,7 @@ class OpenAIMessageProcessorRepository(IMessageProcessorRepository):
         """
 
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo-16k",
+            model=self.open_ai_model,
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": prompt}
