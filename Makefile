@@ -3,3 +3,6 @@ run-format:
 
 update-requirements-file:
 	poetry export -f requirements.txt --output requirements.txt --without-hashes
+
+start-app:
+	uvicorn application:application --reload                                                                            

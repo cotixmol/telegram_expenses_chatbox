@@ -2,6 +2,7 @@
 poetry.lock
 .env
 .pytest_cache
+__pycache__
 
 .DS_STORE
 # Elastic Beanstalk Files
