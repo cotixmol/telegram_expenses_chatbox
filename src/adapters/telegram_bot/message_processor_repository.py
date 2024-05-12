@@ -11,11 +11,10 @@ class OpenAIMessageProcessorRepository(IMessageProcessorRepository):
     def __init__(self, open_ai_api_key):
         self.api_key = open_ai_api_key
 
-
     def process_message(self, user: User, message: Message) -> Expense:
         client = OpenAI(api_key=self.api_key)
         prompt = f"""
-        Based on the message below, output the expense details in JSON format, choosing the appropriate category from the list: 
+        Based on the message below, output the expense details in JSON format, choosing the appropriate category from the list:
         Food, Housing, Transportation, Utilities, Insurance, Medical/Healthcare, Savings, Debt, Education, Entertainment, Other.
         If the message does not detail an expense, respond with: {{ "error": "no expense detailed" }}
         Message: "{message.text}"
@@ -24,18 +23,20 @@ class OpenAIMessageProcessorRepository(IMessageProcessorRepository):
         {{"description": "monthly rent", "amount": 1200, "category": "Housing"}}
         """
 
-        response = client.chat.completions.create(model="gpt-3.5-turbo-16k",
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": prompt}
-        ],
-        max_tokens=60)
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo-16k",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=60
+        )
 
         open_ai_answer = response.choices[0].message.content
 
         if validate_json_structure(open_ai_answer):
             result = json.loads(response.choices[0].message.content)
-            
+
             if 'error' in result:
                 return {"message": "Sorry, but your message is not related to expenses."}
 
@@ -65,4 +66,3 @@ class OpenAIMessageProcessorRepository(IMessageProcessorRepository):
             return expense
         else:
             return {"error": "There was an error analyzing your message. Please, try again."}
-
