@@ -33,7 +33,7 @@ async def process_message(
 
     try:
         response = process_user_message.execute(user=user, message=message)
-        out_response = OutMessage(user_id=user.user_id, content= str(response))
+        out_response = OutMessage(user_id=user.user_id, content=str(response))
         return out_response
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
