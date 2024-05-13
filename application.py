@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Depends, status
 from dotenv import load_dotenv
 from src.config import get_message_processor_repository, get_database_repository
 from src.core.interface import IDatabaseRepository, IMessageProcessorRepository
-from src.core.entities import Message, User, IncomingMessage
+from src.core.entities import Message, User, IncomingMessage, OutMessage
 from src.core.use_cases import ProcessUserMessage
 
 load_dotenv()
@@ -33,6 +33,7 @@ async def process_message(
 
     try:
         response = process_user_message.execute(user=user, message=message)
-        return {"status": "noErrors", "chat_id":user.user_id, "message": response}
+        out_response = OutMessage(user_id=user.user_id, content= str(response))
+        return out_response
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
