@@ -2,6 +2,7 @@ from openai import OpenAI
 import uuid
 from datetime import datetime
 import json
+from src.core.exceptions import NonRelatedToExpensesException, LLMResponseErrorException
 from src.core.interface import IMessageProcessorRepository
 from src.core.entities import Message, ExpenseCategory, User, Expense
 from src.utils import validate_json_structure
@@ -16,7 +17,7 @@ class OpenAIMessageProcessorRepository(IMessageProcessorRepository):
         client = OpenAI(api_key=self.api_key)
         prompt = f"""
         Based on the message below, output the expense details in JSON format, choosing the appropriate category from the list:
-        Food, Housing, Transportation, Utilities, Insurance, Medical/Healthcare, Savings, Debt, Education, Entertainment, Other.
+        Food, Housing, Transportation, Utilities, Insurance, Healthcare, Savings, Debt, Education, Entertainment, Other.
         If the message does not detail an expense, respond with: {{ "error": "no expense detailed" }}
         Message: "{message.text}"
         For Example:
@@ -39,7 +40,7 @@ class OpenAIMessageProcessorRepository(IMessageProcessorRepository):
             result = json.loads(response.choices[0].message.content)
 
             if 'error' in result:
-                return {"message": "Sorry, but your message is not related to expenses."}
+                raise NonRelatedToExpensesException()
 
             category = result['category'].lower()
             category_map = {
@@ -56,14 +57,16 @@ class OpenAIMessageProcessorRepository(IMessageProcessorRepository):
                 "other": ExpenseCategory.OTHER
             }
 
+            expense_category = category_map.get(category, ExpenseCategory.OTHER).value
+    
             expense = Expense(
-                id=uuid.uuid4(),
+                id=str(uuid.uuid4()),
                 user_id=user.user_id,
                 description=result['description'],
                 amount=float(result['amount']),
-                category=category_map.get(category, ExpenseCategory.OTHER),
+                category=expense_category,
                 added_at=datetime.now()
             )
             return expense
         else:
-            return {"error": "There was an error analyzing your message. Please, try again."}
+            raise LLMResponseErrorException()

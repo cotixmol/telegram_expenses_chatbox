@@ -1,6 +1,7 @@
+from fastapi import HTTPException
 from src.core.interface import IMessageProcessorRepository, IDatabaseRepository
 from src.core.entities import User, Message
-from src.core.exceptions import UserNotFoundException
+from src.core.exceptions import UserNotFoundException, NonRelatedToExpensesException, LLMResponseErrorException
 
 
 class ProcessUserMessage:
@@ -17,6 +18,10 @@ class ProcessUserMessage:
         try:
             expense = self.message_processor_repository.process_message(user, message)
             self.database_repository.add_expense(expense)
-            return f"{expense.category} expense added✅"
-        except ValueError as e:
-            return str(e)
+            return f"{expense.category.value} expense added✅"
+        except UserNotFoundException as e:
+            raise HTTPException(status_code=e.status_code, detail=e.detail)
+        except NonRelatedToExpensesException as e:
+            raise HTTPException(status_code=e.status_code, detail=e.detail)
+        except LLMResponseErrorException as e:
+            raise HTTPException(status_code=e.status_code, detail=e.detail)

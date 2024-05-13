@@ -1,1 +1,1 @@
-from .exceptions import UserNotFoundException
+from .exceptions import UserNotFoundException, NonRelatedToExpensesException, LLMResponseErrorException

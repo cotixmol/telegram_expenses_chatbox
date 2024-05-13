@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer, String, DateTime, Numeric, ForeignKey, create_engine
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
+from sqlalchemy import Column, BigInteger, Integer, String, DateTime, Numeric, ForeignKey, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
@@ -11,17 +13,17 @@ Base = declarative_base()
 class UserTable(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
-    telegram_id = Column(Integer, unique=True, nullable=False)
+    telegram_id = Column(BigInteger, unique=True, nullable=False)
 
 
 class ExpenseTable(Base):
     __tablename__ = 'expenses'
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    id = Column(String, primary_key=True, default=uuid.uuid4)
+    user_id = Column(BigInteger, ForeignKey('users.telegram_id'), nullable=False)
     description = Column(String, nullable=False)
     amount = Column(Numeric, nullable=False)
-    category = Column(String, nullable=False)
-    added_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    category = Column(String, nullable=False)  # Assuming integer values for categories
+    added_at = Column(DateTime, default=datetime.now, nullable=False)
 
 
 class PostgreSQLDatabaseRepository(IDatabaseRepository):
@@ -43,11 +45,12 @@ class PostgreSQLDatabaseRepository(IDatabaseRepository):
         with self.Session() as session:
             try:
                 db_expense = ExpenseTable(
+                    id=expense.id,
                     user_id=expense.user_id,
                     description=expense.description,
                     amount=expense.amount,
-                    category=expense.category,
-                    added_at=expense.add_at
+                    category=expense.category.value,
+                    added_at=expense.added_at
                 )
                 session.add(db_expense)
                 session.commit()
