@@ -1,4 +1,5 @@
-from fastapi import status
+from fastapi import status, Request
+from src.utils import standard_response
 
 
 class UserNotFoundException(Exception):
@@ -8,12 +9,12 @@ class UserNotFoundException(Exception):
 
 
 class NonRelatedToExpensesException(Exception):
-    def __init__(self):
+    def __init__(self, user_id: int,):
         self.detail = "Sorry, but your message is not related to expenses. Try in a different or more direct way,"
         self.status_code = status.HTTP_400_BAD_REQUEST
 
 
 class LLMResponseErrorException(Exception):
-    def __init__(self):
+    def __init__(self, user_id: int,):
         self.detail = "There was a problem with the request. Please send you message again."
         self.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR

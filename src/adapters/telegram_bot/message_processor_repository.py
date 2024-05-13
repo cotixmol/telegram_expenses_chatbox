@@ -40,7 +40,7 @@ class OpenAIMessageProcessorRepository(IMessageProcessorRepository):
             result = json.loads(response.choices[0].message.content)
 
             if 'error' in result:
-                raise NonRelatedToExpensesException()
+                raise NonRelatedToExpensesException(user_id=user.user_id)
 
             category = result['category'].lower()
             category_map = {
@@ -69,4 +69,4 @@ class OpenAIMessageProcessorRepository(IMessageProcessorRepository):
             )
             return expense
         else:
-            raise LLMResponseErrorException()
+            raise LLMResponseErrorException(user_id=user.user_id)

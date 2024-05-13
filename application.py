@@ -1,9 +1,11 @@
-from fastapi import FastAPI, HTTPException, Depends, status
+from fastapi import FastAPI, Depends, status
 from dotenv import load_dotenv
 from src.config import get_message_processor_repository, get_database_repository
 from src.core.interface import IDatabaseRepository, IMessageProcessorRepository
-from src.core.entities import Message, User, IncomingMessage, OutMessage
+from src.core.entities import Message, User, IncomingMessage
 from src.core.use_cases import ProcessUserMessage
+from src.utils import standard_response
+from src.core.exceptions import UserNotFoundException, NonRelatedToExpensesException, LLMResponseErrorException
 
 load_dotenv()
 
@@ -16,7 +18,6 @@ async def process_message(
     message_processor_repository: IMessageProcessorRepository = Depends(get_message_processor_repository),
     database_repository: IDatabaseRepository = Depends(get_database_repository)
 ):
-
     process_user_message = ProcessUserMessage(
         message_processor_repository=message_processor_repository,
         database_repository=database_repository
@@ -27,13 +28,16 @@ async def process_message(
         first_name=incoming_message.first_name,
         last_name=incoming_message.last_name
     )
-    message = Message(
-        text=incoming_message.text
-    )
+    message = Message(text=incoming_message.text)
 
     try:
         response = process_user_message.execute(user=user, message=message)
-        out_response = OutMessage(user_id=user.user_id, content=str(response))
-        return out_response
+        return standard_response(status_code=status.HTTP_200_OK, message={"user_id": user.user_id, "content": response})
+    except UserNotFoundException as e:
+        return standard_response(status_code=e.status_code, message={"user_id": user.user_id, "content": e.detail})
+    except NonRelatedToExpensesException as e:
+        return standard_response(status_code=e.status_code, message={"user_id": user.user_id, "content": e.detail})
+    except LLMResponseErrorException as e:
+        return standard_response(status_code=e.status_code, message={"user_id": user.user_id, "content": e.detail})
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        return standard_response(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, message={"user_id": user.user_id, "content": "An unexpected error occurred"})
