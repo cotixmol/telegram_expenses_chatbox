@@ -39,5 +39,7 @@ async def process_message(
         return standard_response(status_code=e.status_code, message={"user_id": user.user_id, "content": e.detail})
     except LLMResponseErrorException as e:
         return standard_response(status_code=e.status_code, message={"user_id": user.user_id, "content": e.detail})
-    except Exception as e:
-        return standard_response(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, message={"user_id": user.user_id, "content": "An unexpected error occurred"})
+    except Exception:
+        return standard_response(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            message={"user_id": user.user_id, "content": "An unexpected error occurred"})

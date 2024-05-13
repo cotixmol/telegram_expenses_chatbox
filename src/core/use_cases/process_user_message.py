@@ -1,6 +1,7 @@
 from src.core.interface import IMessageProcessorRepository, IDatabaseRepository
 from src.core.entities import User, Message
-from src.core.exceptions import UserNotFoundException, NonRelatedToExpensesException, LLMResponseErrorException
+from src.core.exceptions import UserNotFoundException
+
 
 class ProcessUserMessage:
     def __init__(self, message_processor_repository: IMessageProcessorRepository, database_repository: IDatabaseRepository):

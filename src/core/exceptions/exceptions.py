@@ -1,5 +1,4 @@
-from fastapi import status, Request
-from src.utils import standard_response
+from fastapi import status
 
 
 class UserNotFoundException(Exception):
