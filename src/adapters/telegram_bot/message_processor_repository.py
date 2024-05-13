@@ -58,7 +58,7 @@ class OpenAIMessageProcessorRepository(IMessageProcessorRepository):
             }
 
             expense_category = category_map.get(category, ExpenseCategory.OTHER).value
-    
+
             expense = Expense(
                 id=str(uuid.uuid4()),
                 user_id=user.user_id,

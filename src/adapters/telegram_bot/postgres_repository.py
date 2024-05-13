@@ -1,4 +1,3 @@
-from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from sqlalchemy import Column, BigInteger, Integer, String, DateTime, Numeric, ForeignKey, create_engine
 from sqlalchemy.ext.declarative import declarative_base

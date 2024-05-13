@@ -1,10 +1,9 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, status
 from dotenv import load_dotenv
 from src.config import get_message_processor_repository, get_database_repository
 from src.core.interface import IDatabaseRepository, IMessageProcessorRepository
 from src.core.entities import Message, User, IncomingMessage
 from src.core.use_cases import ProcessUserMessage
-from src.core.exceptions import UserNotFoundException, NonRelatedToExpensesException, LLMResponseErrorException
 
 load_dotenv()
 
@@ -36,5 +35,4 @@ async def process_message(
         response = process_user_message.execute(user=user, message=message)
         return {"status": "success", "message": response}
     except Exception as e:
-        raise HTTPException(status_code= 500, detail=str(e))
-
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
