@@ -12,10 +12,10 @@ This bot performs the following steps:
 1. **Receive Message**: Takes a message in the format:
     ```json
     {
-        "user_id": 7133185151,
-        "first_name": "Constancio",
-        "last_name": "Molinengo",
-        "text": "Barbacue Chips $4"
+        "user_id": int,
+        "first_name": str,
+        "last_name": str,
+        "text": str
     }
     ```
 
